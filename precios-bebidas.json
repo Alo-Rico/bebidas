@@ -1,0 +1,62 @@
+{
+  "Sprite 1L Botella": {
+    "precio": 9000,
+    "ingredientes": "",
+    "imagen": "SpriteBotella.jpg",
+    "categoria": "bebidas"
+  },
+  "Sprite 350ml Lata": {
+    "precio": 5000,
+    "ingredientes": "",
+    "imagen": "SpriteLata.jpg",
+    "categoria": "bebidas"
+  },
+  "Cerveza Brahma 1L Botella": {
+    "precio": 12000,
+    "ingredientes": "",
+    "imagen": "BrahmaBotella.jpg",
+    "categoria": "bebidas"
+  },
+  "Cerveza Brahma 350ml Lata": {
+    "precio": 7000,
+    "ingredientes": "",
+    "imagen": "BrahmaLata.jpg",
+    "categoria": "bebidas"
+  },
+  "Coca Cola 1L Botella": {
+    "precio": 9000,
+    "ingredientes": "",
+    "imagen": "CocaBotella.jpg",
+    "categoria": "bebidas"
+  },
+  "Coca Cola 350ml Lata": {
+    "precio": 5000,
+    "ingredientes": "",
+    "imagen": "CocaLata.jpg",
+    "categoria": "bebidas"
+  },
+  "Fanta 1L Botella": {
+    "precio": 9000,
+    "ingredientes": "",
+    "imagen": "FantaBotella.jpg",
+    "categoria": "bebidas"
+  },
+  "Fanta 350ml Lata": {
+    "precio": 5000,
+    "ingredientes": "",
+    "imagen": "FantaLata.jpg",
+    "categoria": "bebidas"
+  },
+  "Cerveza Pilsen 1L Botella": {
+    "precio": 12000,
+    "ingredientes": "",
+    "imagen": "PilsenBotella.jpg",
+    "categoria": "bebidas"
+  },
+  "Cerveza Pilsen 350ml Lata": {
+    "precio": 7000,
+    "ingredientes": "",
+    "imagen": "PilsenLata.jpg",
+    "categoria": "bebidas"
+  }
+}
