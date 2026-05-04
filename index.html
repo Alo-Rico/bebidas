@@ -17,7 +17,7 @@ header img.icono { width: 60px; }
 .product { width: 180px; background: white; margin: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; }
 .product img { width: 100%; height: 140px; object-fit: cover; }
 
-/* EXACTO IGUAL A PIZZA */
+/* 🔥 BOTONES 3D */
 button{
  transition: all 0.15s ease;
  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
@@ -45,8 +45,8 @@ button:active{
  cursor: pointer;
 }
 
-#btnPizza{background:#ffc107;color:#000;}
 #btnHamburguesas{background:#28a745;}
+#btnBebidas{background:#007bff;}
 #btnLomitos{background:#ffc107;color:#000;}
 #btnCarrito{background:#ff5722;}
 
@@ -59,7 +59,6 @@ button:active{
  grid-column:span 2;
 }
 
-/* POPUP IGUAL A PIZZA */
 #pedido-flotante{
  position:fixed;
  bottom:20px;
@@ -82,6 +81,37 @@ button:active{
  opacity:1;
 }
 
+#pedido-flotante h3{
+ margin-top:0;
+}
+
+.acciones-pedido{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ margin-top:10px;
+}
+
+.acciones-pedido button{
+ flex:1;
+ padding:8px;
+ border:none;
+ border-radius:8px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+#btn-borrar{
+ background:#e53935;
+ color:white;
+}
+
+#enviar-whatsapp{
+ background:#2e7d32;
+ color:white;
+}
+
+/* 🗑 items con botón eliminar */
 .item-pedido{
  display:flex;
  justify-content:space-between;
@@ -98,18 +128,6 @@ button:active{
  height:26px;
  cursor:pointer;
 }
-
-/* popup cantidad NO TOCADO */
-#popup-cantidad {
- display:none;
- position:fixed;
- width:100%;
- height:100%;
- background:rgba(0,0,0,0.5);
- justify-content:center;
- align-items:center;
-}
-.popup-content { background:white; padding:20px; }
 </style>
 </head>
 
@@ -117,46 +135,53 @@ button:active{
 
 <header>
 <img src="logo.png" class="logo">
-<h1>Menú de Bebidas</h1>
+<h1>Menú de Pizzas</h1>
 <img src="Repartidor.png" class="icono">
 </header>
 
 <div id="menu" class="menu-container"></div>
 
-<div id="pedido-flotante">
-<h3>Mi Pedido</h3>
-<ul id="lista-pedido"></ul>
-<p id="total-pedido"></p>
-<button id="btn-borrar">Borrar</button>
-<button id="btn-enviar">Enviar</button>
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0008;justify-content:center;align-items:center;">
+ <div style="background:white;padding:20px;border-radius:10px;">
+  <h3 id="modal-titulo"></h3>
+  <input type="number" id="cantidad-input" value="1">
+  <br><br>
+ </div>
 </div>
 
-<div id="popup-cantidad">
-<div class="popup-content">
-<h3 id="popup-nombre"></h3>
-<input id="popup-input" type="number" value="1">
-<br><br>
-<button onclick="confirmarCantidad()">OK</button>
-<button onclick="cerrarPopup()">Cancelar</button>
-</div>
-</div>
-
+<!-- BOTONES -->
 <div class="btn-grid">
-<button id="btnPizza">PIZZAS</button>
-<button id="btnHamburguesas">HAMBURGUESAS</button>
-<button id="btnLomitos">LOMITOS</button>
-<button id="btnCarrito">MI PEDIDO</button>
+<div id="mensaje-total">💰 Total: Gs. 0</div>
+
+<button id="btnPizza" class="btn-flotante">PIZZAS</button>
+<button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
+<button id="btnLomitos" class="btn-flotante">LOMITOS</button>
+<button id="btnCarrito" class="btn-flotante">MI PEDIDO</button>
+
 </div>
 
+<div id="pedido-flotante">
+  <h3>Mi Pedido</h3>
+  <ul id="lista-pedido"></ul>
+  <p id="total-pedido"></p>
+
+  <div class="acciones-pedido">
+    <button id="btn-borrar">Borrar</button>
+    <button id="enviar-whatsapp">Enviar pedido</button>
+  </div>
+</div>
+
+<!-- 🔥 FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
-  authDomain: "alorico-59754.firebaseapp.com",
-  databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
-  projectId: "alorico-59754"
+ apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
+ authDomain: "alorico-59754.firebaseapp.com",
+ databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
+ projectId: "alorico-59754"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -164,108 +189,120 @@ const db = getDatabase(app);
 
 let clienteId = localStorage.getItem("clienteId");
 if (!clienteId) {
-  clienteId = "cliente_" + Date.now();
-  localStorage.setItem("clienteId", clienteId);
+ clienteId = "cliente_" + Date.now();
+ localStorage.setItem("clienteId", clienteId);
 }
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// NAV + AUTO CIERRE IGUAL
-btnPizza.onclick = () => location.href="https://alo-rico.github.io/pizza/";
-btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
-btnLomitos.onclick = () => location.href="https://alo-rico.github.io/lomitos/";
+// BOTONES + ⏱ AUTO CIERRE
+btnHamburguesas.onclick=()=>location.href="https://alo-rico.github.io/pizza/";
+btnLomitos.onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
+btnBebidas.onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
 
-btnCarrito.onclick = ()=>{
+btnCarrito.onclick=()=>{
  const p = document.getElementById("pedido-flotante");
  p.classList.toggle("activo");
+
  if(p.classList.contains("activo")){
-  setTimeout(()=>p.classList.remove("activo"),7000);
+  setTimeout(()=>{ p.classList.remove("activo"); },7000);
  }
 };
 
-// LISTEN + BASURERO
-onValue(pedidoRef, snap=>{
-  const data = snap.val();
-  const lista = document.getElementById("lista-pedido");
-  const totalTxt = document.getElementById("total-pedido");
+// LISTEN + 🗑 BORRAR INDIVIDUAL
+onValue(pedidoRef,(snap)=>{
+ const data=snap.val();
+ let total=0;
+ const lista=document.getElementById("lista-pedido");
+ lista.innerHTML="";
 
-  lista.innerHTML="";
-  let total=0;
+ if(data){
+  Object.entries(data).forEach(([key,p])=>{
+   total+=p.precio*p.cantidad;
 
-  if(data){
-    Object.entries(data).forEach(([key,p])=>{
-      total+=p.precio*p.cantidad;
+   const li=document.createElement("li");
+   li.className="item-pedido";
+   li.innerHTML=`
+     ${p.nombre} x${p.cantidad}
+     <button class="btn-eliminar">🗑</button>
+   `;
 
-      const li=document.createElement("li");
-      li.className="item-pedido";
-      li.innerHTML=`
-        ${p.cantidad} x ${p.nombre}
-        <button class="btn-eliminar">🗑</button>
-      `;
+   li.querySelector(".btn-eliminar").onclick=()=>{
+     remove(ref(db,"pedidos/"+clienteId+"/"+key));
+   };
 
-      li.querySelector(".btn-eliminar").onclick=()=>{
-        remove(ref(db,"pedidos/"+clienteId+"/"+key));
-      };
+   lista.appendChild(li);
+  });
+ }
 
-      lista.appendChild(li);
-    });
-  }
-
-  totalTxt.innerText="Total: Gs. "+total.toLocaleString();
+ document.getElementById("total-pedido").innerText="Gs. "+total;
+ document.getElementById("mensaje-total").style.display=total?"block":"none";
+ document.getElementById("mensaje-total").innerText="💰 Total: Gs. "+total;
 });
 
-// MENU
-const res = await fetch("precios-bebidas.json");
-const productos = await res.json();
-
-const menu = document.getElementById("menu");
-
-Object.entries(productos).forEach(([n,i])=>{
- const card=document.createElement("div");
- card.className="product";
- card.innerHTML=`<img src="img-bebidas/${i.imagen}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
- card.onclick=()=>abrirPopup(n,i.precio);
- menu.appendChild(card);
-});
-
-// POPUP
-let seleccionado={};
+// MODAL
+let productoSeleccionado={};
+let mitadPendiente = null;
 
 window.abrirPopup=(n,p)=>{
- seleccionado={nombre:n,precio:p};
- document.getElementById("popup-nombre").innerText=n;
- document.getElementById("popup-cantidad").style.display="flex";
+ productoSeleccionado={nombre:n,precio:p};
+ document.getElementById("modal").style.display="flex";
+ document.getElementById("modal-titulo").innerText=n;
 };
 
-window.cerrarPopup=()=> document.getElementById("popup-cantidad").style.display="none";
+// BEBIDAS
+document.getElementById("btn-entera").onclick = () => {
+ const cant = parseInt(document.getElementById("cantidad-input").value)||1;
 
-window.confirmarCantidad=()=>{
- const cant=parseInt(document.getElementById("popup-input").value)||1;
- push(pedidoRef,{...seleccionado,cantidad:cant});
- cerrarPopup();
+ push(pedidoRef,{
+  nombre: productoSeleccionado.nombre,
+  precio: productoSeleccionado.precio,
+  cantidad: cant
+ });
+
+ document.getElementById("modal").style.display="none";
 };
 
-// BORRAR
-document.getElementById("btn-borrar").onclick=()=> remove(pedidoRef);
+
+
+// CANCELAR
+document.getElementById("btn-cancelar").onclick=()=>{
+ document.getElementById("modal").style.display="none";
+};
+
+// BORRAR TODO
+document.getElementById("btn-borrar").onclick=()=>remove(pedidoRef);
 
 // WHATSAPP
-document.getElementById("btn-enviar").onclick=()=>{
- onValue(pedidoRef,snap=>{
-  const d=snap.val();
-  if(!d) return alert("Vacío");
+document.getElementById("enviar-whatsapp").onclick=()=>{
+ onValue(pedidoRef,(snap)=>{
+  const data=snap.val();
+  if(!data)return alert("Sin pedido");
 
-  let msg="Pedido:\n";
+  let txt="";
   let total=0;
 
-  Object.values(d).forEach(p=>{
-   msg+=`${p.cantidad} x ${p.nombre}\n`;
+  Object.values(data).forEach(p=>{
+   txt+=`- ${p.nombre} x${p.cantidad}\n`;
    total+=p.precio*p.cantidad;
   });
 
-  msg+=`\nTotal: Gs. ${total.toLocaleString()}`;
-  window.open("https://wa.me/?text="+encodeURIComponent(msg));
+  const msg=`Hola:%0A${txt}%0ATotal: Gs. ${total}`;
+  window.open(`https://wa.me/+595971891251?text=${msg}`);
  },{onlyOnce:true});
 };
+
+// MENU
+const res=await fetch("precios.json");
+const productos=await res.json();
+
+Object.entries(productos).forEach(([n,i])=>{
+ const div=document.createElement("div");
+ div.className="product";
+ div.innerHTML=`<img src="${i.imagen}?v=${Date.now()}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
+ div.onclick=()=>abrirPopup(n,i.precio);
+ document.getElementById("menu").appendChild(div);
+});
 </script>
 
 </body>
