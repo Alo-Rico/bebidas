@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +13,7 @@ header img.logo { width: 120px; }
 header h1 { font-size: 28px; color: #c24a00; }
 header img.icono { width: 60px; }
 
-.menu-container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; padding-bottom: 120px; }
+.menu-container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; padding-bottom: 180px; }
 
 .product {
   width: 180px;
@@ -23,6 +24,16 @@ header img.icono { width: 60px; }
   cursor: pointer;
 }
 .product img { width: 100%; height: 140px; object-fit: contain; }
+
+/* 🔥 BOTONES 3D */
+button{
+ transition: all 0.15s ease;
+ box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+button:active{
+ transform: translateY(3px);
+ box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
 
 .btn-grid {
   position: fixed;
@@ -47,18 +58,47 @@ header img.icono { width: 60px; }
 #btnLomitos { background:#ff5722; }
 #btnCarrito { background:#007bff; }
 
-#pedido-flotante {
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  width:380px;
-  background:white;
-  padding:15px;
-  border-radius:10px;
+/* 🔥 POPUP IGUAL A PIZZA */
+#pedido-flotante{
+ position:fixed;
+ bottom:20px;
+ left:50%;
+ transform:translateX(-50%) translateY(120px);
+ background:#fff;
+ padding:18px;
+ border-radius:15px;
+ box-shadow:0 12px 35px rgba(0,0,0,0.25);
+ opacity:0;
+ transition:all 0.35s ease;
+ z-index:9999;
+ width:90%;
+ max-width:320px;
+ text-align:center;
 }
-#pedido-flotante.activo { transform:translate(-50%,-50%) scale(1); }
 
+#pedido-flotante.activo{
+ transform:translateX(-50%) translateY(0);
+ opacity:1;
+}
+
+.item-pedido{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin:6px 0;
+}
+
+.btn-eliminar{
+ background:#e53935;
+ color:white;
+ border:none;
+ border-radius:50%;
+ width:26px;
+ height:26px;
+ cursor:pointer;
+}
+
+/* POPUP CANTIDAD (sin tocar lógica) */
 #popup-cantidad {
  display:none;
  position:fixed;
@@ -68,7 +108,7 @@ header img.icono { width: 60px; }
  justify-content:center;
  align-items:center;
 }
-.popup-content { background:white; padding:20px; }
+.popup-content { background:white; padding:20px; border-radius:10px; }
 </style>
 </head>
 
@@ -115,10 +155,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
   authDomain: "alorico-59754.firebaseapp.com",
   databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
-  projectId: "alorico-59754",
-  storageBucket: "alorico-59754.firebasestorage.app",
-  messagingSenderId: "120993494626",
-  appId: "1:120993494626:web:9f9cb0ad6fbfbd1abd033b"
+  projectId: "alorico-59754"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -132,13 +169,20 @@ if (!clienteId) {
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// LINKS
+// NAV + AUTO CIERRE
 btnPizza.onclick = () => location.href="https://alo-rico.github.io/pizza/";
 btnHamburguesas.onclick = () => location.href="https://alo-rico.github.io/hamburguesa/";
 btnLomitos.onclick = () => location.href="https://alo-rico.github.io/lomitos/";
-btnCarrito.onclick = () => document.getElementById("pedido-flotante").classList.toggle("activo");
 
-// LISTEN
+btnCarrito.onclick = ()=>{
+ const p=document.getElementById("pedido-flotante");
+ p.classList.toggle("activo");
+ if(p.classList.contains("activo")){
+  setTimeout(()=>p.classList.remove("activo"),7000);
+ }
+};
+
+// LISTEN + BASURERO
 onValue(pedidoRef, snap=>{
   const data = snap.val();
   const lista = document.getElementById("lista-pedido");
@@ -148,11 +192,21 @@ onValue(pedidoRef, snap=>{
   let total=0;
 
   if(data){
-    Object.values(data).forEach(p=>{
-      const li=document.createElement("li");
-      li.innerText=`${p.cantidad} x ${p.nombre}`;
-      lista.appendChild(li);
+    Object.entries(data).forEach(([key,p])=>{
       total+=p.precio*p.cantidad;
+
+      const li=document.createElement("li");
+      li.className="item-pedido";
+      li.innerHTML=`
+        ${p.cantidad} x ${p.nombre}
+        <button class="btn-eliminar">🗑</button>
+      `;
+
+      li.querySelector(".btn-eliminar").onclick=()=>{
+        remove(ref(db,"pedidos/"+clienteId+"/"+key));
+      };
+
+      lista.appendChild(li);
     });
   }
 
@@ -190,7 +244,7 @@ window.confirmarCantidad=()=>{
  cerrarPopup();
 };
 
-// BORRAR
+// BORRAR TODO
 document.getElementById("btn-borrar").onclick=()=> remove(pedidoRef);
 
 // WHATSAPP
@@ -215,3 +269,4 @@ document.getElementById("btn-enviar").onclick=()=>{
 
 </body>
 </html>
+```
