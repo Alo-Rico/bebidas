@@ -196,9 +196,9 @@ if (!clienteId) {
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
 // BOTONES + ⏱ AUTO CIERRE
-btnpizza.onclick=()=>location.href="https://alo-rico.github.io/pizza/";
-btnhamburguesas.onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
-btnlomitos.onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
+btnPizza.onclick=()=>location.href="https://alo-rico.github.io/pizza/";
+btnHamburguesas.onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
+btnLomitos.onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
 
 btnCarrito.onclick=()=>{
  const p = document.getElementById("pedido-flotante");
@@ -239,36 +239,6 @@ onValue(pedidoRef,(snap)=>{
  document.getElementById("mensaje-total").style.display=total?"block":"none";
  document.getElementById("mensaje-total").innerText="💰 Total: Gs. "+total;
 });
-
-// MODAL
-let productoSeleccionado={};
-let mitadPendiente = null;
-
-window.abrirPopup=(n,p)=>{
- productoSeleccionado={nombre:n,precio:p};
- document.getElementById("modal").style.display="flex";
- document.getElementById("modal-titulo").innerText=n;
-};
-
-// BEBIDAS
-document.getElementById("btn-entera").onclick = () => {
- const cant = parseInt(document.getElementById("cantidad-input").value)||1;
-
- push(pedidoRef,{
-  nombre: productoSeleccionado.nombre,
-  precio: productoSeleccionado.precio,
-  cantidad: cant
- });
-
- document.getElementById("modal").style.display="none";
-};
-
-
-
-// CANCELAR
-document.getElementById("btn-cancelar").onclick=()=>{
- document.getElementById("modal").style.display="none";
-};
 
 // BORRAR TODO
 document.getElementById("btn-borrar").onclick=()=>remove(pedidoRef);
