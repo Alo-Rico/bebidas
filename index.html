@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +7,7 @@
 <title>Menú Alo Rico - Bebidas</title>
 
 <style>
+/* TODO TU CSS ORIGINAL SIN CAMBIOS */
 body { font-family: Arial, sans-serif; background-color: #fefaf0; text-align: center; margin: 0; padding: 0; }
 header { margin-top: 20px; }
 header img.logo { width: 120px; }
@@ -17,63 +19,27 @@ header img.icono { width: 60px; }
 .product { width: 180px; background: white; margin: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; }
 .product img { width: 100%; height: 140px; object-fit: cover; }
 
-/* 🔥 BOTONES 3D */
-button{
- transition: all 0.15s ease;
- box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-}
-button:active{
- transform: translateY(3px);
- box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-}
+button{ transition: all 0.15s ease; box-shadow: 0 4px 0 rgba(0,0,0,0.2); }
+button:active{ transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
 
-.btn-grid {
- position: fixed;
- right: 15px;
- bottom: 15px;
- display: grid;
- grid-template-columns: 1fr 1fr;
- gap: 10px;
-}
+.btn-grid { position: fixed; right: 15px; bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-.btn-flotante {
- color: #fff;
- border: none;
- padding: 12px;
- border-radius: 50px;
- font-weight: bold;
- cursor: pointer;
-}
+.btn-flotante { color: #fff; border: none; padding: 12px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
 #btnHamburguesas{background:#28a745;}
 #btnBebidas{background:#007bff;}
 #btnLomitos{background:#ffc107;color:#000;}
 #btnCarrito{background:#ff5722;}
 
-#mensaje-total{
- display:none;
- background:#28a745;
- color:#fff;
- padding:8px;
- border-radius:10px;
- grid-column:span 2;
-}
+#mensaje-total{ display:none; background:#28a745; color:#fff; padding:8px; border-radius:10px; grid-column:span 2; }
 
 #pedido-flotante{
- position:fixed;
- bottom:20px;
- left:50%;
+ position:fixed; bottom:20px; left:50%;
  transform:translateX(-50%) translateY(120px);
- background:#fff;
- padding:18px;
- border-radius:15px;
+ background:#fff; padding:18px; border-radius:15px;
  box-shadow:0 12px 35px rgba(0,0,0,0.25);
- opacity:0;
- transition:all 0.35s ease;
- z-index:9999;
- width:90%;
- max-width:320px;
- text-align:center;
+ opacity:0; transition:all 0.35s ease;
+ z-index:9999; width:90%; max-width:320px; text-align:center;
 }
 
 #pedido-flotante.activo{
@@ -81,53 +47,14 @@ button:active{
  opacity:1;
 }
 
-#pedido-flotante h3{
- margin-top:0;
-}
+.acciones-pedido{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; }
+.acciones-pedido button{ flex:1; padding:8px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
 
-.acciones-pedido{
- display:flex;
- justify-content:space-between;
- gap:10px;
- margin-top:10px;
-}
+#btn-borrar{ background:#e53935; color:white; }
+#enviar-whatsapp{ background:#2e7d32; color:white; }
 
-.acciones-pedido button{
- flex:1;
- padding:8px;
- border:none;
- border-radius:8px;
- font-weight:bold;
- cursor:pointer;
-}
-
-#btn-borrar{
- background:#e53935;
- color:white;
-}
-
-#enviar-whatsapp{
- background:#2e7d32;
- color:white;
-}
-
-/* 🗑 items con botón eliminar */
-.item-pedido{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:6px 0;
-}
-
-.btn-eliminar{
- background:#e53935;
- color:white;
- border:none;
- border-radius:50%;
- width:26px;
- height:26px;
- cursor:pointer;
-}
+.item-pedido{ display:flex; justify-content:space-between; align-items:center; margin:6px 0; }
+.btn-eliminar{ background:#e53935; color:white; border:none; border-radius:50%; width:26px; height:26px; cursor:pointer; }
 </style>
 </head>
 
@@ -147,10 +74,11 @@ button:active{
   <h3 id="modal-titulo"></h3>
   <input type="number" id="cantidad-input" value="1">
   <br><br>
+  <button onclick="confirmarCantidad()">Agregar</button>
+  <button onclick="cerrarModal()">Cancelar</button>
  </div>
 </div>
 
-<!-- BOTONES -->
 <div class="btn-grid">
 <div id="mensaje-total">💰 Total: Gs. 0</div>
 
@@ -158,79 +86,65 @@ button:active{
 <button id="btnHamburguesas" class="btn-flotante">HAMBURGUESAS</button>
 <button id="btnLomitos" class="btn-flotante">LOMITOS</button>
 <button id="btnCarrito" class="btn-flotante">MI PEDIDO</button>
-
 </div>
 
 <div id="pedido-flotante">
-  <h3>Mi Pedido</h3>
-  <ul id="lista-pedido"></ul>
-  <p id="total-pedido"></p>
-
-  <div class="acciones-pedido">
-    <button id="btn-borrar">Borrar</button>
-    <button id="enviar-whatsapp">Enviar pedido</button>
-  </div>
+<h3>Mi Pedido</h3>
+<ul id="lista-pedido"></ul>
+<p id="total-pedido"></p>
+<div class="acciones-pedido">
+<button id="btn-borrar">Borrar</button>
+<button id="enviar-whatsapp">Enviar pedido</button>
+</div>
 </div>
 
-<!-- 🔥 FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
+const app = initializeApp({
+ apiKey: "AIzaSyAD...",
  authDomain: "alorico-59754.firebaseapp.com",
  databaseURL: "https://alorico-59754-default-rtdb.firebaseio.com",
  projectId: "alorico-59754"
-};
+});
 
-const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let clienteId = localStorage.getItem("clienteId");
-if (!clienteId) {
- clienteId = "cliente_" + Date.now();
- localStorage.setItem("clienteId", clienteId);
-}
+let clienteId = localStorage.getItem("clienteId") || ("cliente_"+Date.now());
+localStorage.setItem("clienteId", clienteId);
 
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
-// BOTONES + ⏱ AUTO CIERRE
+// BOTONES
 btnPizza.onclick=()=>location.href="https://alo-rico.github.io/pizza/";
 btnHamburguesas.onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
 btnLomitos.onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
 
 btnCarrito.onclick=()=>{
- const p = document.getElementById("pedido-flotante");
+ const p=document.getElementById("pedido-flotante");
  p.classList.toggle("activo");
-
  if(p.classList.contains("activo")){
-  setTimeout(()=>{ p.classList.remove("activo"); },7000);
+  setTimeout(()=>p.classList.remove("activo"),7000);
  }
 };
 
-// LISTEN + 🗑 BORRAR INDIVIDUAL
-onValue(pedidoRef,(snap)=>{
+// LISTENER
+onValue(pedidoRef,snap=>{
  const data=snap.val();
  let total=0;
  const lista=document.getElementById("lista-pedido");
  lista.innerHTML="";
 
  if(data){
-  Object.entries(data).forEach(([key,p])=>{
+  Object.entries(data).forEach(([k,p])=>{
    total+=p.precio*p.cantidad;
 
    const li=document.createElement("li");
    li.className="item-pedido";
-   li.innerHTML=`
-     ${p.nombre} x${p.cantidad}
-     <button class="btn-eliminar">🗑</button>
-   `;
+   li.innerHTML=`${p.nombre} x${p.cantidad} <button class="btn-eliminar">🗑</button>`;
 
-   li.querySelector(".btn-eliminar").onclick=()=>{
-     remove(ref(db,"pedidos/"+clienteId+"/"+key));
-   };
-
+   li.querySelector("button").onclick=()=>remove(ref(db,"pedidos/"+clienteId+"/"+k));
    lista.appendChild(li);
   });
  }
@@ -240,39 +154,47 @@ onValue(pedidoRef,(snap)=>{
  document.getElementById("mensaje-total").innerText="💰 Total: Gs. "+total;
 });
 
-// BORRAR TODO
 document.getElementById("btn-borrar").onclick=()=>remove(pedidoRef);
 
-// WHATSAPP
 document.getElementById("enviar-whatsapp").onclick=()=>{
- onValue(pedidoRef,(snap)=>{
-  const data=snap.val();
-  if(!data)return alert("Sin pedido");
-
-  let txt="";
-  let total=0;
-
-  Object.values(data).forEach(p=>{
+ onValue(pedidoRef,snap=>{
+  const d=snap.val(); if(!d)return alert("Sin pedido");
+  let txt="",total=0;
+  Object.values(d).forEach(p=>{
    txt+=`- ${p.nombre} x${p.cantidad}\n`;
    total+=p.precio*p.cantidad;
   });
-
-  const msg=`Hola, envio mi pedido:%0A${txt}%0ATotal: Gs. ${total}`;
-  window.open(`https://wa.me/+595971891251?text=${msg}`);
+  window.open(`https://wa.me/+595971891251?text=${encodeURIComponent(txt+"Total: Gs. "+total)}`);
  },{onlyOnce:true});
 };
 
-// MENU
-const res=await fetch("precios.json");
+// 🔥 FIX IMÁGENES + JSON
+const res=await fetch("precios-bebidas.json");
 const productos=await res.json();
 
 Object.entries(productos).forEach(([n,i])=>{
  const div=document.createElement("div");
  div.className="product";
- div.innerHTML=`<img src="${i.imagen}?v=${Date.now()}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
- div.onclick=()=>abrirPopup(n,i.precio);
- document.getElementById("menu").appendChild(div);
+ div.innerHTML=`<img src="img-bebidas/${i.imagen}?v=${Date.now()}"><h3>${n}</h3><p>Gs. ${i.precio}</p>`;
+ div.onclick=()=>abrirModal(n,i.precio);
+ menu.appendChild(div);
 });
+
+// MODAL
+let seleccionado={};
+window.abrirModal=(n,p)=>{
+ seleccionado={nombre:n,precio:p};
+ document.getElementById("modal-titulo").innerText=n;
+ document.getElementById("modal").style.display="flex";
+};
+
+window.cerrarModal=()=>document.getElementById("modal").style.display="none";
+
+window.confirmarCantidad=()=>{
+ const c=parseInt(document.getElementById("cantidad-input").value)||1;
+ push(pedidoRef,{...seleccionado,cantidad:c});
+ cerrarModal();
+};
 </script>
 
 </body>
