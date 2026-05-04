@@ -26,8 +26,8 @@ button:active{ transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); 
 
 .btn-flotante { color: #fff; border: none; padding: 12px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
-#btnHamburguesas{background:#28a745;}
-#btnBebidas{background:#007bff;}
+#btnPizza{background:#ff9800;color:#fff;}
+#btnHamburguesas{background:#007bff;}
 #btnLomitos{background:#ffc107;color:#000;}
 #btnCarrito{background:#ff5722;}
 
@@ -117,11 +117,11 @@ localStorage.setItem("clienteId", clienteId);
 const pedidoRef = ref(db, "pedidos/" + clienteId);
 
 // BOTONES
-btnPizza.onclick=()=>location.href="https://alo-rico.github.io/pizza/";
-btnHamburguesas.onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
-btnLomitos.onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
+document.getElementById("btnPizza").onclick=()=>location.href="https://alo-rico.github.io/pizza/";
+document.getElementById("btnHamburguesas").onclick=()=>location.href="https://alo-rico.github.io/hamburguesa/";
+document.getElementById("btnLomitos").onclick=()=>location.href="https://alo-rico.github.io/lomitos/";
 
-btnCarrito.onclick=()=>{
+document.getElementById("btnCarrito").onclick=()=>{
  const p=document.getElementById("pedido-flotante");
  p.classList.toggle("activo");
  if(p.classList.contains("activo")){
