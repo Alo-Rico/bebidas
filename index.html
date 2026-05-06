@@ -376,7 +376,7 @@ params.get("mesa") || "general";
 
 const app = initializeApp({
 
- apiKey: "AIzaSyAD...",
+ apiKey: "AIzaSyADGYsqhbCFuKj2fXpontLpND_rtT7Nlno",
 
  authDomain: "alorico-59754.firebaseapp.com",
 
@@ -544,34 +544,48 @@ document.getElementById("enviar-whatsapp").onclick = ()=>{
  },{onlyOnce:true});
 };
 
-/* MENU */
+/* MENU FIREBASE */
 
-const res =
-await fetch("precios-bebidas.json");
+const menuRef =
+ref(db,"productos");
 
-const productos =
-await res.json();
+onValue(menuRef,(snap)=>{
 
-Object.entries(productos).forEach(([n,i])=>{
+ const data = snap.val();
 
- const div =
- document.createElement("div");
+ const menu =
+ document.getElementById("menu");
 
- div.className = "product";
+ menu.innerHTML = "";
 
- div.innerHTML = `
-  <img src="img-bebidas/${i.imagen}">
-  <h3>${n}</h3>
-  <p>Gs. ${i.precio.toLocaleString()}</p>
- `;
+ if(data){
 
- div.onclick = ()=>{
+  Object.values(data).forEach((i)=>{
 
-  abrirModal(n,i.precio);
- };
+   if(i.categoria !== "bebidas") return;
 
- document.getElementById("menu")
- .appendChild(div);
+   const div =
+   document.createElement("div");
+
+   div.className = "product";
+
+   div.innerHTML = `
+    <img src="${i.imagen}">
+    <h3>${i.nombre}</h3>
+    <p>Gs. ${Number(i.precio).toLocaleString()}</p>
+   `;
+
+   div.onclick = ()=>{
+
+    abrirModal(
+      i.nombre,
+      Number(i.precio)
+    );
+   };
+
+   menu.appendChild(div);
+  });
+ }
 });
 
 /* MODAL */
