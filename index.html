@@ -436,7 +436,7 @@ const params =
 new URLSearchParams(window.location.search);
 
 const mesa =
-params.get("mesa") || "general";
+params.get("mesa") || "PEDIDO DESDE CASA";
 
 /* FIREBASE */
 
@@ -528,8 +528,14 @@ onValue(pedidoRef,(snap)=>{
 
    li.className = "item-pedido";
 
-   li.innerHTML = `
-    <span>${p.nombre} x${p.cantidad}</span>
+li.innerHTML = `
+    <span>
+      ${p.nombre} x${p.cantidad}
+      <br>
+      <strong>
+        Gs. ${(p.precio * p.cantidad).toLocaleString()}
+      </strong>
+    </span>
 
     <button class="btn-eliminar">
       🗑
@@ -595,7 +601,7 @@ document.getElementById("enviar-whatsapp").onclick = ()=>{
 
   Object.values(d).forEach(p=>{
 
-   txt += `- ${p.nombre} x${p.cantidad}%0A`;
+  txt += `- ${p.nombre} x${p.cantidad} - Gs. ${(p.precio * p.cantidad).toLocaleString()}%0A`;
 
    total += p.precio * p.cantidad;
   });
